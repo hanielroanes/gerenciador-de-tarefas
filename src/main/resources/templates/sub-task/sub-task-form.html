@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8" />
+    <title>Task Manager</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+          crossorigin="anonymous">
+
+    <script type="text/javascript">
+	$(function() {
+		$("#nomeCidade").autocomplete({
+			source: "cidadesNomeAutoComplete",
+			minLength: 3,
+			select: function(event, ui) {
+				this.value = ui.item.label;
+				$("#idCidade").val(ui.item.value);
+				return false;
+			}
+		});
+
+		$("#nomeDepartamento").autocomplete({
+			source: "departamentosNomeAutoComplete",
+			minLength: 3,
+			select: function(event, ui) {
+				this.value = ui.item.label;
+				$("#idDepartamento").val(ui.item.value);
+				return false;
+			}
+		});
+	});
+    </script>
+
+</head>
+<body>
+<!--<header th:insert="fragments/geral.html :: header"> </header>-->
+
+<div class="container my-2">
+    <h2>Sub Task</h2>
+    <form action="#" th:action="@{/tasks/{taskId}/sub-tasks(taskId=${taskId})}" th:object="${subTask}" method="POST">
+
+        <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger"></span>
+        <input type="text" th:field="*{description}" placeholder="Description" class="form-control mb-4 col-4">
+
+        <button type="submit" class="btn btn-info col-2">save</button>
+    </form>
+    <hr>
+    <a th:href="@{/tasks/{taskId}/sub-tasks(taskId=${taskId})}">Return to to-do list</a>
+</div>
+</body>
+</html>

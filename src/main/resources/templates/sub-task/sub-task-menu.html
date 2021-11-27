@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Manager</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+          crossorigin="anonymous">
+</head>
+<body>
+    <header th:insert="fragments/commun.html :: header"> </header>
+    <div class="container my-2">
+        <a th:href="@{/tasks/{taskId}/sub-tasks/post(taskId=${taskId})}" class="btn btn-primary btn-sm mb-3">Create Sub Task</a>
+        <h1>SubTasks</h1>
+        <div th:switch="${subTasks.content}">
+            <h3 th:if="${subTasks.content==null or subTasks.content.empty}" >no subtasks found!</h3>
+            <div th:if="${subTasks.content!=null and !subTasks.content.empty}">
+                <table border="1" class="table table-striped table-responsive-md">
+                    <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th class="col-2">Status</th>
+                        <th class="col-3">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="subTask : ${subTasks.content}">
+                        <td th:text="${subTask.description}"></td>
+                        <td class="d-flex justify-content-center">
+                            <div th:if="${#strings.equalsIgnoreCase(subTask.status, 'started')}">
+                                <a th:href="@{/tasks/{taskId}/sub-tasks/{id}/alter-status(taskId=${taskId}, id=${subTask.id})}" class="btn btn-secondary">in progress</a>
+                            </div>
+                            <div th:if="${#strings.equalsIgnoreCase(subTask.status, 'finished')}">
+                                <a th:href="@{/tasks/{taskId}/sub-tasks/{id}/alter-status(taskId=${taskId}, id=${subTask.id})}" class="btn btn-warning">Finished</a>
+                            </div>
+
+                        </td>
+                        <td>
+                            <a th:href="@{/tasks/{taskId}/sub-tasks/{id}/put(taskId=${taskId}, id=${subTask.id})}" class="btn btn-primary">Update</a>
+                            <a th:href="@{/tasks/{taskId}/sub-tasks/{id}/delete(taskId=${taskId}, id=${subTask.id})}" class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <hr>
+        <a th:href="@{/tasks}">Return to to-do list</a>
+    </div>
+</body>
+</html>
